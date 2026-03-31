@@ -515,6 +515,6 @@ graph TD
 | 9 | Feature Family Mapping | Activity / Responsiveness / Sustainability / Governance / Popularity로 재분류 | Modeling 목적 기반 구조화 | Feature Family 구조 |
 | 10 | Time-Series Generation Scoring | 시간 anchor 및 집계 가능 신호만 최종 선별 | Repo-level Time-Series Modeling 가능성 확보 | Core Raw Signal Set |
 
-이 과정을 통해 GitHub API의 수백 개 필드에서 **최종 72개의 Core Raw Signal**이 선별되었으며, 이는 5개 평가 차원의 점수 산출에 직접 활용된다.
+이 과정을 통해 GitHub API의 수백 개 필드에서 건강도 분석에 유의미한 **Core Raw Signal**이 선별되며, 최종 선별 결과는 점수화 로직 구현 과정에서 확정 예정이다.
 
 > Feature Selection 코드 및 상세 실험 기록: https://github.com/carolyn0515/repo-feature-mining-lab
