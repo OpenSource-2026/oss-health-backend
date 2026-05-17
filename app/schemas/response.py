@@ -1,8 +1,9 @@
 """Response schemas returned by the public API.
 
-Mirrors the contract documented in README.md and docs/proposal.md so that
-the frontend (강수빈, 한예준) can develop against this shape using mock
-responses while the real analysis pipeline (김나경) is integrated.
+The shape mirrors the analysis-engine output contract agreed with the data
+pipeline (김나경). Frontend (강수빈, 한예준) develops against this schema
+via the mock response in `app/api/v1/analyze.py` while the real pipeline
+and Gemini integrations are wired in during Phase G.
 """
 
 from typing import Literal
@@ -31,20 +32,27 @@ class DimensionScore(BaseModel):
     details: dict[str, int] = Field(
         ...,
         description=(
-            "Per-sub-concept scores. Keys vary by dimension "
-            "(e.g. activity_volume, responsiveness for community_activity)."
+            "Per-sub-concept scores. Keys vary by dimension and are owned "
+            "by the analysis pipeline (e.g. commit_frequency, pr_count for "
+            "community_activity)."
         ),
     )
 
 
 class HealthDimensions(BaseModel):
-    """The five health dimensions evaluated for every repository."""
+    """The six health dimensions evaluated for every repository.
+
+    The dimension set matches the analysis engine's scoring framework:
+    Community Activity, Contributor Sustainability, Release Engineering,
+    Governance, Maintenance, Adoption / Popularity.
+    """
 
     community_activity: DimensionScore
-    sustainability: DimensionScore
-    code_quality: DimensionScore
+    contributor_sustainability: DimensionScore
+    release_engineering: DimensionScore
     governance: DimensionScore
-    maturity: DimensionScore
+    maintenance: DimensionScore
+    adoption_popularity: DimensionScore
 
 
 class HealthScore(BaseModel):
