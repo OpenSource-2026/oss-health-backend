@@ -106,49 +106,60 @@ GitHub 레포지토리 URL을 받아 건강도를 분석합니다.
   },
   "health_score": {
     "total": 82,
+    "grade": "A",
     "dimensions": {
       "community_activity": {
         "score": 91,
         "grade": "A",
         "details": {
-          "activity_volume": 95,
-          "responsiveness": 88,
-          "engagement_quality": 90
+          "commit_frequency": 95,
+          "pr_throughput": 88,
+          "issue_engagement": 90
         }
       },
-      "sustainability": {
+      "contributor_sustainability": {
         "score": 78,
         "grade": "B",
         "details": {
-          "contributor_structure": 72,
-          "diversity": 81,
-          "activity_stability": 80
+          "bus_factor": 72,
+          "contributor_diversity": 81,
+          "new_contributor_inflow": 80
         }
       },
-      "code_quality": {
+      "release_engineering": {
         "score": 85,
         "grade": "A",
         "details": {
-          "engineering_practice": 90,
-          "defect_signals": 82,
-          "security_signals": 83
+          "release_frequency": 90,
+          "semantic_versioning": 82,
+          "release_stability": 83
         }
       },
       "governance": {
         "score": 76,
         "grade": "B",
         "details": {
-          "legal_compliance": 100,
-          "governance_structure": 52
+          "license_clarity": 100,
+          "contributing_docs": 60,
+          "code_of_conduct": 52
         }
       },
-      "maturity": {
+      "maintenance": {
+        "score": 74,
+        "grade": "B",
+        "details": {
+          "issue_response_time": 70,
+          "pr_merge_time": 78,
+          "stale_issue_ratio": 74
+        }
+      },
+      "adoption_popularity": {
         "score": 80,
         "grade": "B",
         "details": {
-          "release_engineering": 85,
-          "adoption_popularity": 92,
-          "lifecycle_scale": 63
+          "star_growth": 92,
+          "fork_growth": 78,
+          "dependent_count": 70
         }
       }
     }
@@ -178,7 +189,7 @@ GitHub 레포지토리 URL을 받아 건강도를 분석합니다.
 ```json
 {
   "status": "ok",
-  "version": "1.0.0"
+  "version": "0.1.0"
 }
 ```
 
@@ -247,16 +258,15 @@ docker-compose up -d --build
 ```mermaid
 graph LR
     A[PR 생성] --> B[Lint\nruff]
-    B --> C[Type Check\nmypy]
-    C --> D[Test\npytest]
-    D --> E[Docker Build\n검증]
-    E --> F[PR 머지 승인]
+    B --> C[Test\npytest]
+    C --> D[Docker Build\n검증]
+    D --> E[PR 머지 승인]
 
     style A fill:#f5f5f5,stroke:#333
-    style F fill:#4CAF50,stroke:#388E3C,color:#fff
+    style E fill:#4CAF50,stroke:#388E3C,color:#fff
 ```
 
-모든 PR은 위 파이프라인을 통과해야 머지할 수 있습니다.
+모든 PR은 위 파이프라인(`.github/workflows/ci.yml`)을 통과해야 머지할 수 있습니다.
 
 ---
 
