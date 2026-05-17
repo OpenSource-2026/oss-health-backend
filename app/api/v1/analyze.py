@@ -23,11 +23,12 @@ router = APIRouter(tags=["analyze"])
 
 
 def _build_mock_report(request: AnalyzeRequest) -> HealthReport:
-    """Construct a deterministic mock report mirroring the README example.
+    """Construct a deterministic mock report aligned with the six-dimension schema.
 
     Echoes the requested URL inside `Repository.url` so the frontend can
     verify round-trip wiring during integration without depending on the
-    real GitHub fetch.
+    real GitHub fetch. Per-dimension `details` keys are placeholder names
+    pending the analysis pipeline's final sub-feature list.
     """
     return HealthReport(
         repository=Repository(
@@ -46,44 +47,54 @@ def _build_mock_report(request: AnalyzeRequest) -> HealthReport:
                     score=91,
                     grade="A",
                     details={
-                        "activity_volume": 95,
-                        "responsiveness": 88,
-                        "engagement_quality": 90,
+                        "commit_frequency": 95,
+                        "pr_throughput": 88,
+                        "issue_engagement": 90,
                     },
                 ),
-                sustainability=DimensionScore(
+                contributor_sustainability=DimensionScore(
                     score=78,
                     grade="B",
                     details={
-                        "contributor_structure": 72,
-                        "diversity": 81,
-                        "activity_stability": 80,
+                        "bus_factor": 72,
+                        "contributor_diversity": 81,
+                        "new_contributor_inflow": 80,
                     },
                 ),
-                code_quality=DimensionScore(
+                release_engineering=DimensionScore(
                     score=85,
                     grade="A",
                     details={
-                        "engineering_practice": 90,
-                        "defect_signals": 82,
-                        "security_signals": 83,
+                        "release_frequency": 90,
+                        "semantic_versioning": 82,
+                        "release_stability": 83,
                     },
                 ),
                 governance=DimensionScore(
                     score=76,
                     grade="B",
                     details={
-                        "legal_compliance": 100,
-                        "governance_structure": 52,
+                        "license_clarity": 100,
+                        "contributing_docs": 60,
+                        "code_of_conduct": 52,
                     },
                 ),
-                maturity=DimensionScore(
+                maintenance=DimensionScore(
+                    score=74,
+                    grade="B",
+                    details={
+                        "issue_response_time": 70,
+                        "pr_merge_time": 78,
+                        "stale_issue_ratio": 74,
+                    },
+                ),
+                adoption_popularity=DimensionScore(
                     score=80,
                     grade="B",
                     details={
-                        "release_engineering": 85,
-                        "adoption_popularity": 92,
-                        "lifecycle_scale": 63,
+                        "star_growth": 92,
+                        "fork_growth": 78,
+                        "dependent_count": 70,
                     },
                 ),
             ),
