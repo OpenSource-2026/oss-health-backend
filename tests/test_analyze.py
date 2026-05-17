@@ -41,8 +41,8 @@ def test_analyze_rejects_invalid_url() -> None:
     assert response.status_code == 422
 
 
-def test_analyze_response_contains_five_dimensions() -> None:
-    """All five health dimensions documented in proposal.md are present."""
+def test_analyze_response_contains_six_dimensions() -> None:
+    """All six health dimensions from the analysis framework are present."""
     response = client.post(
         "/api/v1/analyze",
         json={"repo_url": "https://github.com/facebook/react"},
@@ -51,8 +51,23 @@ def test_analyze_response_contains_five_dimensions() -> None:
     dimensions = response.json()["health_score"]["dimensions"]
     assert set(dimensions.keys()) == {
         "community_activity",
-        "sustainability",
-        "code_quality",
+        "contributor_sustainability",
+        "release_engineering",
         "governance",
-        "maturity",
+        "maintenance",
+        "adoption_popularity",
     }
+
+
+def test_analyze_each_dimension_has_score_and_grade() -> None:
+    """Every dimension exposes the score/grade/details contract the frontend renders."""
+    response = client.post(
+        "/api/v1/analyze",
+        json={"repo_url": "https://github.com/facebook/react"},
+    )
+
+    dimensions = response.json()["health_score"]["dimensions"]
+    for name, dim in dimensions.items():
+        assert 0 <= dim["score"] <= 100, name
+        assert dim["grade"] in {"A", "B", "C", "D", "F"}, name
+        assert isinstance(dim["details"], dict) and dim["details"], name

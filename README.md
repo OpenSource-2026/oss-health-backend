@@ -1,9 +1,9 @@
 # OSS Health Checker — Backend
 
+[![CI](https://github.com/OpenSource-2026/oss-health-backend/actions/workflows/ci.yml/badge.svg)](https://github.com/OpenSource-2026/oss-health-backend/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?logo=fastapi&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)
-![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub_Actions-2088FF?logo=githubactions&logoColor=white)
 ![License](https://img.shields.io/badge/License-Apache_2.0-blue)
 
 > OSS Health Checker의 핵심 API 서버. GitHub 데이터 수집, 건강도 분석 파이프라인 실행, AI 리포트 생성을 오케스트레이션합니다.
