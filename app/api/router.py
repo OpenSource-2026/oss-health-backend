@@ -1,16 +1,25 @@
-"""Root API router that aggregates versioned sub-routers.
+"""Root API router that aggregates the public sub-routers.
 
-Each API version owns its own `APIRouter` and is mounted under a version
-prefix here. New versions (e.g. v2) can be added without touching v1 code.
+Mounted by `app.main` under the `/api` prefix, producing:
+
+    /api/oss-health/diagnose   canonical analysis endpoint (consumed by frontend)
+    /api/v1/health             service health check
+
+The analysis flow is model-backed via the vendored data pipeline; see
+`app/api/oss_health.py`.
 """
 
 from fastapi import APIRouter
 
-from app.api.v1 import analyze, health
+from app.api import oss_health
+from app.api.v1 import health
 
 v1_router = APIRouter(prefix="/v1")
 v1_router.include_router(health.router)
-v1_router.include_router(analyze.router)
+
+oss_health_router = APIRouter(prefix="/oss-health")
+oss_health_router.include_router(oss_health.router)
 
 api_router = APIRouter()
 api_router.include_router(v1_router)
+api_router.include_router(oss_health_router)
