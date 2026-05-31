@@ -18,8 +18,10 @@ WORKDIR /app
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 
-# Copy application source.
+# Copy application source and the vendored analysis pipeline (model artifact,
+# reference dataset, feature/inference code) that app/services imports.
 COPY app ./app
+COPY pipeline ./pipeline
 
 # Drop privileges: create a non-root user and hand over /app ownership.
 RUN useradd --create-home --uid 1000 appuser \

@@ -1,12 +1,10 @@
-"""GitHub data-collection service.
+"""GitHub URL parsing + repository metadata helper.
 
-Owns the repository metadata fetch used by the analysis pipeline. Parses
-GitHub URLs into `(owner, repo)` and hits the REST API via `GitHubClient`,
-returning the subset of fields the rest of the application cares about
-(populating `schemas.response.Repository`).
-
-The real fetch is implemented; Phase G wires this into `analysis_service`
-once the analysis pipeline's input contract is finalised with 김나경.
+Standalone utility: parses GitHub URLs into `(owner, repo)` and can fetch
+basic repo metadata via `GitHubClient`. The current diagnose flow does its
+own GitHub fetching inside the vendored pipeline, so this module is not on
+the request path today; `parse_repo_url` is kept (and tested) as a reusable
+helper and an entry point for future response enrichment (stars/forks/etc.).
 """
 
 from __future__ import annotations

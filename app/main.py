@@ -11,6 +11,7 @@ OpenAPI docs are exposed at:
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from app import __version__
 from app.api.router import api_router
@@ -38,3 +39,8 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix="/api")
+
+# Expose Prometheus metrics at GET /metrics (default HTTP metrics + the custom
+# counters in app.metrics). Scraped by the Prometheus service in docker-compose
+# and visualised in Grafana.
+Instrumentator().instrument(app).expose(app, endpoint="/metrics", include_in_schema=False)
