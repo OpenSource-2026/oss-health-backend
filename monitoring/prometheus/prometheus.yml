@@ -1,0 +1,13 @@
+# Prometheus scrape config for the OSS Health Checker backend.
+# Scrapes the FastAPI /metrics endpoint exposed by
+# prometheus-fastapi-instrumentator. `backend` is the compose service name.
+
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: oss-health-backend
+    metrics_path: /metrics
+    static_configs:
+      - targets: ["backend:8000"]
