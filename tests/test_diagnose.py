@@ -46,11 +46,14 @@ def _clear_cache():
     one test would be returned to the next (e.g. the sample-fallback test
     would get a cache hit and never exercise the fallback path).
     """
+    import app.api.oss_health as oss_health
     import app.services.diagnosis_service as svc
 
     svc._cache.clear()
+    oss_health._results.clear()
     yield
     svc._cache.clear()
+    oss_health._results.clear()
 
 
 @pytest.fixture
@@ -133,6 +136,28 @@ def test_diagnose_caches_live_result(live_engine, monkeypatch) -> None:
     assert first.status_code == second.status_code == 200
     assert first.json() == second.json()
     assert calls["n"] == 1  # engine ran once; second hit the cache
+
+
+def test_diagnose_returns_share_id(live_engine) -> None:
+    """The diagnose response carries a share id for the QR 'view on phone' link."""
+    body = _post().json()
+    assert isinstance(body.get("share_id"), str) and body["share_id"]
+
+
+def test_shared_result_roundtrips(live_engine) -> None:
+    """GET /result/{id} returns the exact stored diagnosis (no re-analysis)."""
+    diagnosed = _post().json()
+    share_id = diagnosed["share_id"]
+
+    fetched = client.get(f"/api/oss-health/result/{share_id}")
+    assert fetched.status_code == 200
+    assert fetched.json() == diagnosed
+
+
+def test_shared_result_unknown_id_returns_404() -> None:
+    """An unknown/expired share id returns 404 so the phone can show a message."""
+    response = client.get("/api/oss-health/result/deadbeef00")
+    assert response.status_code == 404
 
 
 def test_diagnose_sample_fallback_marks_source(monkeypatch) -> None:
