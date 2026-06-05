@@ -1,0 +1,255 @@
+{
+  "repo_name": "pallets/flask",
+  "overall_score": 99.87,
+  "healthy_probability": 0.9987,
+  "overall_grade": "Excellent",
+  "model_name": "LogisticRegression",
+  "target": "new_label",
+  "dimension_scores": [
+    {
+      "dimension": "community_activity",
+      "label": "커뮤니티 활성도",
+      "score": 51.09,
+      "grade": "Weak",
+      "core_question": "이 프로젝트는 현재 살아 움직이고 있는가?",
+      "concepts": "Activity Volume, Responsiveness, Engagement Quality",
+      "summary": "커뮤니티 활성도 점수는 51.1점으로 개선이 필요하다.",
+      "strength_features": [
+        {
+          "feature": "num_events",
+          "label": "최근 활동량",
+          "score": 100.0,
+          "description": "최근 GitHub 이벤트가 많아 프로젝트 활동량이 높게 관찰됩니다."
+        },
+        {
+          "feature": "has_IssuesEvent",
+          "label": "이슈 활동 존재",
+          "score": 100.0,
+          "description": "이슈 기반 논의가 관찰됩니다."
+        },
+        {
+          "feature": "has_IssueCommentEvent",
+          "label": "이슈 댓글 활동 존재",
+          "score": 100.0,
+          "description": "이슈 댓글을 통한 상호작용이 관찰됩니다."
+        }
+      ],
+      "risk_features": [
+        {
+          "feature": "external_interest_event_ratio",
+          "label": "외부 관심 이벤트 의존도",
+          "score": 26.41,
+          "description": "Watch/Fork 같은 외부 관심 이벤트에 비해 실제 상호작용이 부족할 수 있습니다."
+        },
+        {
+          "feature": "non_external_activity_ratio",
+          "label": "실제 내부 활동 비율",
+          "score": 27.38,
+          "description": "단순 관심 이벤트보다 실제 개발/상호작용 활동 비중이 높습니다."
+        },
+        {
+          "feature": "development_ratio",
+          "label": "개발 중심 활동 비율",
+          "score": 32.27,
+          "description": "push와 PR 중심의 개발 활동이 유지되고 있습니다."
+        }
+      ]
+    },
+    {
+      "dimension": "sustainability",
+      "label": "지속 가능성",
+      "score": 45.77,
+      "grade": "Weak",
+      "core_question": "이 프로젝트는 앞으로도 유지될 수 있는가?",
+      "concepts": "Contributor Structure, Diversity, Activity Stability",
+      "summary": "지속 가능성 점수는 45.8점으로 개선이 필요하다.",
+      "strength_features": [
+        {
+          "feature": "num_contributors",
+          "label": "기여자 수",
+          "score": 100.0,
+          "description": "참여 contributor 수가 많아 유지보수 기반이 넓습니다."
+        },
+        {
+          "feature": "is_recently_updated_90d",
+          "label": "최근 90일 내 업데이트 여부",
+          "score": 100.0,
+          "description": "최근 90일 내 repository 업데이트가 확인됩니다."
+        },
+        {
+          "feature": "is_recently_pushed_30d",
+          "label": "최근 30일 내 push 여부",
+          "score": 100.0,
+          "description": "최근 30일 내 push가 있어 최신 개발 활동이 확인됩니다."
+        }
+      ],
+      "risk_features": [
+        {
+          "feature": "is_stale_365d",
+          "label": "1년 이상 비활성 여부",
+          "score": 19.71,
+          "description": "1년 이상 주요 활동이 없을 가능성이 있습니다."
+        },
+        {
+          "feature": "contributors_to_stars_ratio",
+          "label": "관심도 대비 기여자 비율",
+          "score": 21.76,
+          "description": "외부 관심도에 비해 실제 contributor 기반이 약할 수 있습니다."
+        },
+        {
+          "feature": "contribution_gini",
+          "label": "기여 불균형",
+          "score": 28.36,
+          "description": "기여 분포의 불균형이 커질 수 있습니다."
+        }
+      ]
+    },
+    {
+      "dimension": "code_quality_reliability",
+      "label": "코드 품질 및 신뢰성",
+      "score": 60.64,
+      "grade": "Moderate",
+      "core_question": "이 프로젝트의 산출물은 믿을 수 있는가?",
+      "concepts": "Engineering Practice, Defect Signals, Security Signals",
+      "summary": "코드 품질 및 신뢰성 점수는 60.6점으로 중간 수준이다.",
+      "strength_features": [
+        {
+          "feature": "latest_tag_is_stable",
+          "label": "최신 태그 안정성",
+          "score": 100.0,
+          "description": "최신 릴리즈가 안정 버전으로 보입니다."
+        },
+        {
+          "feature": "has_pull_requests",
+          "label": "Pull Request 운영 여부",
+          "score": 100.0,
+          "description": "Pull Request 기반 협업 운영이 가능합니다."
+        },
+        {
+          "feature": "open_issues_to_stars_ratio",
+          "label": "관심도 대비 열린 이슈 부담",
+          "score": 97.56,
+          "description": "관심도 대비 열린 이슈 부담이 큽니다."
+        }
+      ],
+      "risk_features": [
+        {
+          "feature": "latest_tag_is_prerelease",
+          "label": "최신 태그 pre-release 여부",
+          "score": 11.0,
+          "description": "최신 릴리즈가 pre-release라 안정성 판단에 주의가 필요합니다."
+        },
+        {
+          "feature": "language_entropy",
+          "label": "언어 구성 다양성",
+          "score": 17.85,
+          "description": "언어 구성이 다양해 구조적 복잡도가 높을 수 있습니다."
+        },
+        {
+          "feature": "development_ratio",
+          "label": "개발 중심 활동 비율",
+          "score": 32.27,
+          "description": "push와 PR 중심의 개발 활동이 유지되고 있습니다."
+        }
+      ]
+    },
+    {
+      "dimension": "legal_operational_governance",
+      "label": "법적/운영 거버넌스",
+      "score": 61.12,
+      "grade": "Moderate",
+      "core_question": "이 프로젝트는 조직적으로 안전하게 운영되는가?",
+      "concepts": "Legal Compliance, Governance Structure",
+      "summary": "법적/운영 거버넌스 점수는 61.1점으로 중간 수준이다.",
+      "strength_features": [
+        {
+          "feature": "has_issues",
+          "label": "이슈 기능 활성화",
+          "score": 100.0,
+          "description": "이슈 기반 운영이 가능하도록 열려 있습니다."
+        },
+        {
+          "feature": "has_downloads",
+          "label": "다운로드 기능 활성화",
+          "score": 100.0,
+          "description": "다운로드 기능이 활성화되어 있습니다."
+        },
+        {
+          "feature": "has_discussions",
+          "label": "토론 기능 활성화",
+          "score": 100.0,
+          "description": "커뮤니티 토론 기능이 활성화되어 있습니다."
+        }
+      ],
+      "risk_features": [
+        {
+          "feature": "disabled",
+          "label": "비활성화 상태",
+          "score": 0.0,
+          "description": "repository가 disabled 상태일 수 있어 접근성과 운영에 리스크가 있습니다."
+        },
+        {
+          "feature": "archived",
+          "label": "아카이브 상태",
+          "score": 8.8,
+          "description": "repository가 archived 상태일 수 있어 운영 지속성에 리스크가 있습니다."
+        },
+        {
+          "feature": "negative_repo_state",
+          "label": "부정적 repository 상태",
+          "score": 8.8,
+          "description": "archived 또는 disabled 같은 부정적 상태 신호가 있습니다."
+        }
+      ]
+    },
+    {
+      "dimension": "project_maturity",
+      "label": "프로젝트 성숙도",
+      "score": 69.02,
+      "grade": "Moderate",
+      "core_question": "이 프로젝트는 성숙한 운영 체계를 갖추었는가?",
+      "concepts": "Release Engineering, Adoption/Popularity, Lifecycle/Scale",
+      "summary": "프로젝트 성숙도 점수는 69.0점으로 중간 수준이다.",
+      "strength_features": [
+        {
+          "feature": "num_tags",
+          "label": "릴리즈 태그 수",
+          "score": 100.0,
+          "description": "릴리즈 태그가 충분히 누적되어 있습니다."
+        },
+        {
+          "feature": "has_deployments",
+          "label": "배포 기록 존재",
+          "score": 100.0,
+          "description": "배포 활동이 확인됩니다."
+        },
+        {
+          "feature": "tag_based_deployment_ratio",
+          "label": "태그 기반 배포 비율",
+          "score": 100.0,
+          "description": "reference dataset과 비교했을 때 긍정적인 신호로 나타납니다."
+        }
+      ],
+      "risk_features": [
+        {
+          "feature": "deployment_recency_days",
+          "label": "마지막 배포 경과일",
+          "score": 22.25,
+          "description": "최근 배포가 오래되어 배포 최신성이 약할 수 있습니다."
+        },
+        {
+          "feature": "release_recency_score",
+          "label": "릴리즈 최신성 점수",
+          "score": 22.25,
+          "description": "최근 릴리즈/배포 신호가 좋습니다."
+        },
+        {
+          "feature": "repo_size",
+          "label": "Repository 규모",
+          "score": 26.16,
+          "description": "repository 규모가 커 프로젝트 축적도가 높습니다."
+        }
+      ]
+    }
+  ]
+}
