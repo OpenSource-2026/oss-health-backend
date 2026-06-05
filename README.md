@@ -143,6 +143,11 @@ GitHub 레포지토리 URL(또는 `owner/repo`)을 받아 학습된 모델로 �
 | `strength_features` / `risk_features` | 차원별 강점/위험 신호 (`feature`, `label`, `score`, `description`) |
 | `source` | `live`(모델 실호출) 또는 `sample`(토큰 없음/GitHub 불가 시 fallback) |
 | `ai_report` | **선택** — `GEMINI_API_KEY`가 있을 때만 포함 |
+| `share_id` | QR "폰으로 보기" 공유 링크용 짧은 id (`GET /result/{id}`로 재조회) |
+
+### `GET /api/oss-health/result/{share_id}`
+
+직전 진단 결과를 `share_id`로 다시 조회합니다. **재분석·AI 재호출 없이** 저장된 결과를 그대로 반환하며, 프론트의 QR(폰에서 결과 보기) 기능이 사용합니다. 결과는 메모리에 1시간 보관되고, 없거나 만료된 id는 `404`를 반환합니다.
 
 ### `GET /api/v1/health`
 

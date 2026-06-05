@@ -88,6 +88,10 @@ class DiagnoseResponse(BaseModel):
     target: str | None = None
     dimension_scores: list[DimensionScore]
     ai_report: AIReport | None = None
+    # Short opaque id for re-fetching this exact result via
+    # `GET /api/oss-health/result/{share_id}` — powers the QR "view on phone"
+    # share link without re-running analysis or the AI call.
+    share_id: str | None = None
     source: Literal["live", "sample"] = Field(
         default="live",
         description=(
