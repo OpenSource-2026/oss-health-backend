@@ -167,7 +167,7 @@ GitHub 레포지토리 URL(또는 `owner/repo`)을 받아 학습된 모델로 �
 
 ### `POST /internal/model-promoted`
 
-데이터팀 모델 업데이트 파이프라인이 새 champion 모델을 promote한 뒤 호출하는 **내부 webhook**입니다 (데이터팀 `MODEL_UPDATE_CONTRACT.md`). 백엔드는 이벤트를 받으면 모델 아티팩트 5종을 다시 로드해 **재시작 없이** 이후 진단에 새 모델을 적용합니다.
+데이터팀 모델 업데이트 파이프라인이 새 champion 모델을 promote한 뒤 호출하는 **내부 webhook**입니다 (계약: `pipeline/MODEL_UPDATE_CONTRACT.md` — 데이터팀에서 벤더링). 백엔드는 이벤트를 받으면 모델 아티팩트 5종을 다시 로드해 **재시작 없이** 이후 진단에 새 모델을 적용합니다.
 
 - 새 `model_version`이면 리로드, 같은 버전이면 no-op (`reason`으로 구분).
 - 아티팩트 로드 실패 시 **기존 모델을 유지**하고 `500`을 반환합니다 (부분 교체 안 함).
