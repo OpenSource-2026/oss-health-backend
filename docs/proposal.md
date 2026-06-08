@@ -128,7 +128,7 @@ graph LR
 4. 로딩 화면이 표시되며, 백엔드에서 GitHub API 데이터 수집 및 분석이 진행된다.
 5. 분석이 완료되면 결과 대시보드로 이동한다.
 6. 대시보드에서 다음을 확인한다:
-   - **종합 건강도 점수** (0~100점) 및 등급 (A/B/C/D/F)
+   - **종합 건강도 점수** (0~100점) 및 등급 (Excellent / Good / Moderate / Weak / Risk)
    - **5개 차원별 점수** — 레이더 차트로 시각화
    - **차원별 세부 지표** — 각 차원을 클릭하면 세부 개념별 점수 확인
    - **AI 개선 제안** — Gemini가 생성한 구체적 개선 방안 (강점 / 개선점)
@@ -155,7 +155,7 @@ sequenceDiagram
     participant AI as Gemini API
 
     User->>FE: GitHub URL 입력 및 분석 요청
-    FE->>BE: POST /api/v1/analyze {repo_url}
+    FE->>BE: POST /api/oss-health/diagnose {repo_url}
     BE->>GH: 레포 메타데이터 요청
     GH-->>BE: repos, commits, issues, pulls, releases, contributors 응답
     BE->>DP: 수집된 데이터 전달
@@ -183,36 +183,32 @@ sequenceDiagram
 
 #### 결과 대시보드 (한예준 담당)
 
-결과 화면은 **2페이지 구성**으로, 첫 페이지에서 수치적 개요를, 두 번째 페이지에서 차원별 상세 분석을 제공한다.
-
-**결과 1페이지 — 점수 개요**
+결과 화면은 **단일 스크롤 대시보드**로, 상단에서 수치적 개요를 보여주고 아래로 스크롤하며 차원별 상세 분석까지 한 화면에서 제공한다.
 
 | 구성 요소 | 설명 |
 |-----------|------|
-| 상단 메뉴바 | OSHC 로고 + "OpenSource" 메뉴 + Login/Menu 버튼 |
-| 레포지토리 URL 표시 | 메뉴바 하단 좌측에 분석 대상 오픈소스 주소 표시 |
-| 레이더 차트 (좌측) | 5각 방사형 차트. 꼭지점: A(활성도), S(지속성), Q(품질/신뢰성), G(거버넌스), M(성숙도) |
-| Average Score (우측 상단) | 종합 건강도 점수를 크게 표시 |
-| 차원별 개별 점수 (우측 하단) | 5개 평가 차원 점수를 3개 + 2개 그리드로 배치. 각 점수는 색상으로 등급 표시 |
-| 상세 보기 버튼 (하단 중앙) | 화살표 아이콘, hover 시 "For more info" 툴팁, 클릭 시 2페이지로 이동 |
+| 상단 메뉴바 | OSHC 로고 + "OpenSource" 메뉴 |
+| 레포지토리 URL 표시 | 분석 대상 오픈소스 주소 표시 |
+| 종합 점수(Overall Score) | 종합 건강도 점수 + 등급을 크게 표시 |
+| 레이더 차트 | 5각 방사형 차트. 꼭지점: A(활성도), S(지속성), Q(품질/신뢰성), G(거버넌스), M(성숙도) |
+| 차원별 점수 카드 | 5개 평가 차원 점수를 그리드로 배치. 각 점수는 색상으로 등급 표시. 카드 클릭 시 강점/위험 신호 상세 펼침 |
+| 막대 비교 | 5개 차원 점수를 막대로 비교 |
+| 개선 제안 TOP 3 | 위험 신호 기반 우선 개선 항목 |
+| AI 분석 리포트 | Gemini 생성 요약·강점·개선점 (키가 설정된 경우) |
 
-**결과 2페이지 — 차원별 상세 분석**
+> 인증(로그인/회원가입) 기능은 최종 구현에서 제외하였다. 분석에 로그인이 필요 없는 단일 플로우로 단순화했다.
 
-| 구성 요소 | 설명 |
-|-----------|------|
-| 차원별 상세 카드 (3+2 배치) | 5개 평가 차원 각각에 대해 점수 범위에 해당하는 상세 설명 문구를 카드 형태로 표시. 상단 3개 + 하단 2개 배치 |
-| AI 개선 제안 영역 | 강점(Positive Signals)과 개선점(Negative Signals)을 구분하여 표시 |
+**등급 체계 (색상 표시)**
 
-**점수 색상 기준**
+| 등급 | 색상 | 설명 |
+|------|------|------|
+| Excellent | 🔵 Blue | 매우 우수 |
+| Good | 🟢 Green | 양호 |
+| Moderate | 🟡 Yellow | 보통 |
+| Weak | 🟠 Orange | 개선 필요 |
+| Risk | 🔴 Red | 심각한 위험 |
 
-| 등급 | 점수 범위 | 색상 | 설명 |
-|------|-----------|------|------|
-| 최고점 | 95 ~ 100 | 🔵 Blue | 매우 우수 |
-| 성공적 | 71 ~ 94 | 🟢 Green | 양호 |
-| 보안 권장 | 40 ~ 70 | 🟡 Yellow | 개선 필요 |
-| 빈약 | 0 ~ 39 | 🔴 Red | 심각한 개선 필요 |
-
-> 점수 구간은 분석 엔진의 점수화 로직 완성 후 유명 오픈소스 검증을 거쳐 최종 확정 예정
+> 종합 점수는 모델이 산출한 healthy 확률(0~100)이며, 차원별 점수는 reference 데이터셋 대비 백분위로 산출된다. 등급은 이 점수를 위 5단계로 매핑한다.
 
 **타이포그래피**
 
@@ -228,14 +224,14 @@ sequenceDiagram
 ```mermaid
 graph TD
     A[메인 페이지] -->|URL 입력 + 분석 시작| B[로딩 화면]
-    B -->|분석 완료| C[결과 1페이지 — 점수 개요]
-    C -->|For more info 클릭| D[결과 2페이지 — 차원별 상세 분석]
+    B -->|분석 완료| C[결과 대시보드 — 점수 개요 + 차원별 상세]
+    C -->|차원 카드 클릭| D[강점/위험 신호 상세 펼침]
     A -->|메뉴 클릭| E[평가 차원 소개]
 ```
 
 ### 2.6 API 명세
 
-#### `POST /api/v1/analyze`
+#### `POST /api/oss-health/diagnose`
 
 GitHub 레포지토리 URL을 받아 건강도를 분석하고 결과를 반환한다.
 
@@ -251,64 +247,31 @@ GitHub 레포지토리 URL을 받아 건강도를 분석하고 결과를 반환�
 
 ```json
 {
-  "repository": {
-    "name": "react",
-    "owner": "facebook",
-    "url": "https://github.com/facebook/react",
-    "stars": 48221,
-    "forks": 19774,
-    "language": "JavaScript"
-  },
-  "health_score": {
-    "total": 82,
-    "grade": "A",
-    "dimensions": {
-      "community_activity": {
-        "score": 91,
-        "grade": "A",
-        "details": {
-          "activity_volume": 95,
-          "responsiveness": 88,
-          "engagement_quality": 90
-        }
-      },
-      "sustainability": {
-        "score": 78,
-        "grade": "B",
-        "details": {
-          "contributor_structure": 72,
-          "diversity": 81,
-          "activity_stability": 80
-        }
-      },
-      "code_quality": {
-        "score": 85,
-        "grade": "A",
-        "details": {
-          "engineering_practice": 90,
-          "defect_signals": 82,
-          "security_signals": 83
-        }
-      },
-      "governance": {
-        "score": 76,
-        "grade": "B",
-        "details": {
-          "legal_compliance": 100,
-          "governance_structure": 52
-        }
-      },
-      "maturity": {
-        "score": 80,
-        "grade": "B",
-        "details": {
-          "release_engineering": 85,
-          "adoption_popularity": 92,
-          "lifecycle_scale": 63
-        }
-      }
+  "repo_name": "facebook/react",
+  "overall_score": 99.98,
+  "healthy_probability": 0.9998,
+  "overall_grade": "Excellent",
+  "model_name": "LogisticRegression",
+  "target": "new_label",
+  "dimension_scores": [
+    {
+      "dimension": "community_activity",
+      "label": "커뮤니티 활성도",
+      "score": 88.5,
+      "grade": "Good",
+      "core_question": "이 프로젝트는 현재 살아 움직이고 있는가?",
+      "concepts": "Activity Volume, Responsiveness, Engagement Quality",
+      "summary": "최근 활동량이 활발하게 관찰됩니다.",
+      "strength_features": [
+        { "feature": "recent_event_density", "label": "최근 활동 밀도", "score": 92.0, "description": "최근 이벤트 활동이 활발합니다." }
+      ],
+      "risk_features": [
+        { "feature": "issue_close_rate", "label": "이슈 해결률", "score": 41.0, "description": "이슈 해결률이 다소 낮습니다." }
+      ]
     }
-  },
+    // ... sustainability, code_quality_reliability,
+    //     legal_operational_governance, project_maturity (총 5개 차원)
+  ],
   "ai_report": {
     "summary": "React는 전반적으로 건강한 오픈소스 프로젝트입니다.",
     "strengths": [
@@ -321,9 +284,13 @@ GitHub 레포지토리 URL을 받아 건강도를 분석하고 결과를 반환�
       "최근 30일간 미응답 이슈 비율이 높습니다. 이슈 트리아지 프로세스를 도입하세요.",
       "릴리즈 주기가 불규칙합니다. 정기 릴리즈 일정을 수립하는 것을 권장합니다."
     ]
-  }
+  },
+  "share_id": "a1b2c3d4e5",
+  "source": "live"
 }
 ```
+
+> `ai_report`는 `GEMINI_API_KEY`가 설정된 경우에만 포함된다. `source`는 모델로 실제 분석한 경우 `live`, 토큰 부재·GitHub 접근 불가 시 번들 샘플을 반환하면 `sample`이다. `share_id`는 QR 공유 링크(`GET /api/oss-health/result/{share_id}`)로 동일 결과를 재조회하는 데 쓰인다.
 
 #### `GET /api/v1/health`
 
@@ -332,7 +299,7 @@ GitHub 레포지토리 URL을 받아 건강도를 분석하고 결과를 반환�
 ```json
 {
   "status": "ok",
-  "version": "1.0.0"
+  "version": "0.1.0"
 }
 ```
 
