@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
 from app import __version__
+from app.api import internal
 from app.api.router import api_router
 from app.config import get_settings
 
@@ -39,6 +40,11 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix="/api")
+
+# Internal data-pipeline webhook (model hot-reload). Mounted at the app root,
+# outside /api, to match oss-health-data's MODEL_UPDATE_CONTRACT.md path
+# (POST /internal/model-promoted). Not for browser/frontend use.
+app.include_router(internal.router, prefix="/internal")
 
 # Expose Prometheus metrics at GET /metrics (default HTTP metrics + the custom
 # counters in app.metrics). Scraped by the Prometheus service in docker-compose

@@ -52,14 +52,17 @@ oss-health-backend/
 │   ├── api/
 │   │   ├── router.py            # API 라우터 통합
 │   │   ├── oss_health.py        # POST /api/oss-health/diagnose — 진단 (메인)
+│   │   ├── internal.py          # POST /internal/model-promoted — 모델 핫리로드 (데이터팀 webhook)
 │   │   └── v1/
 │   │       └── health.py        # GET  /api/v1/health — 서버 상태 확인
 │   ├── services/
 │   │   ├── diagnosis_service.py # 분석 엔진(pipeline) 호출 + 샘플 fallback
 │   │   ├── ai_report_service.py # Gemini 연동 (선택적 ai_report 생성)
+│   │   ├── model_reload_service.py # model_promoted 시 모델 아티팩트 핫리로드
 │   │   └── github_service.py    # GitHub URL 파싱 유틸
 │   ├── schemas/
-│   │   └── diagnosis.py         # 진단 요청/응답 스키마 (데이터팀 계약)
+│   │   ├── diagnosis.py         # 진단 요청/응답 스키마 (데이터팀 계약)
+│   │   └── model_update.py      # model_promoted webhook 스키마 (데이터팀 계약)
 │   ├── fixtures/
 │   │   └── sample_diagnosis.json# 키 없을 때 쓰는 샘플 진단 (실제 엔진 출력)
 │   └── utils/
@@ -160,6 +163,26 @@ GitHub 레포지토리 URL(또는 `owner/repo`)을 받아 학습된 모델로 �
   "status": "ok",
   "version": "0.1.0"
 }
+```
+
+### `POST /internal/model-promoted`
+
+데이터팀 모델 업데이트 파이프라인이 새 champion 모델을 promote한 뒤 호출하는 **내부 webhook**입니다 (데이터팀 `MODEL_UPDATE_CONTRACT.md`). 백엔드는 이벤트를 받으면 모델 아티팩트 5종을 다시 로드해 **재시작 없이** 이후 진단에 새 모델을 적용합니다.
+
+- 새 `model_version`이면 리로드, 같은 버전이면 no-op (`reason`으로 구분).
+- 아티팩트 로드 실패 시 **기존 모델을 유지**하고 `500`을 반환합니다 (부분 교체 안 함).
+- 브라우저용이 아닌 내부망 전용 엔드포인트입니다 (Airflow가 호출). 공개 배포 시 네트워크 정책/공유 시크릿으로 보호하세요.
+
+**Request** (주요 필드 — `event_type`/`model_version` 필수)
+
+```json
+{ "event_type": "model_promoted", "model_version": "20260608_031522", "trigger_reason": "feature_drift" }
+```
+
+**Response**
+
+```json
+{ "reloaded": true, "reason": "model_reloaded", "model_version": "20260608_031522" }
 ```
 
 ### `GET /metrics`
